@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 
+import com.example.popballoons.HighScoreHelper;
+
 public class MainActivity extends AppCompatActivity implements PopListener{
 
     ViewGroup contentView;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
     private ArrayList<Balloon> balloons = new ArrayList<>();
     TextView levelDisplay;
     TextView scoreDisplay;
+    TextView highScoreDisplay;
     Button btn;
 
     @Override
@@ -54,7 +57,11 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         contentView = (ViewGroup) findViewById(R.id.content_view);
         levelDisplay = (TextView) findViewById(R.id.level_display);
         scoreDisplay = (TextView) findViewById(R.id.score_display);
+        highScoreDisplay = (TextView) findViewById(R.id.high_score_display);
         btn = (Button) findViewById(R.id.go_button);
+
+        int newScore = HighScoreHelper.getTopScore(this);
+        highScoreDisplay.setText(String.format("%d", newScore));
 
         pinImages.add((ImageView) findViewById(R.id.pushpin1));
         pinImages.add((ImageView) findViewById(R.id.pushpin2));
@@ -137,6 +144,12 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         for (Balloon bal : balloons){
             bal.setPopped(true);
             contentView.removeView(bal);
+        }
+
+        if (HighScoreHelper.isTopScore(this, userScore)){
+            HighScoreHelper.setTopScore(this, userScore);
+            int newHigh = HighScoreHelper.getTopScore(this);
+            highScoreDisplay.setText(String.format("%d", newHigh));
         }
     }
 
