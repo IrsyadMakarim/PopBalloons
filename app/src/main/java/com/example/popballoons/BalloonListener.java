@@ -15,7 +15,6 @@ public class BalloonListener implements Animator.AnimatorListener, ValueAnimator
     public void onAnimationStart(Animator animator) {
 
     }
-
     @Override
     public void onAnimationEnd(Animator animator) {
 

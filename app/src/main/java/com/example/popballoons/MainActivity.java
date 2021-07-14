@@ -127,6 +127,10 @@ public class MainActivity extends AppCompatActivity implements PopListener{
 
     private void gameOver(){
         isGameStopped = true;
+        isGameStarted = false;
+        balloonsPopped = 0;
+        pinsUsed = 0;
+        level = 0;
         Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
         btn.setText("Play Game");
 
@@ -138,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements PopListener{
 
     private void startLevel(){
         if (isGameStopped){
-
             isGameStopped = false;
             startGame();
         }
@@ -167,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements PopListener{
     }
 
     public void launchBalloon(int xPos){
-        balloonsLaunched++;
 
         int curColor = colors[nextColor()];
         Balloon btemp = new Balloon(MainActivity.this,
@@ -238,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         }
 
         public void run(){
-            while(balloonsLaunched <= balloonsPerLevel){
+            while(balloonsLaunched < balloonsPerLevel){
 
                 balloonsLaunched++;
                 Random random = new Random(new Date().getTime());

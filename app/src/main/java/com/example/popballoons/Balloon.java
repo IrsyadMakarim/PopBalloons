@@ -1,5 +1,6 @@
 package com.example.popballoons;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.Log;
@@ -11,11 +12,10 @@ import android.view.animation.LinearInterpolator;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
-public class Balloon extends AppCompatImageView implements View.OnTouchListener{
+public class Balloon extends AppCompatImageView implements View.OnTouchListener, Animator.AnimatorListener, ValueAnimator.AnimatorUpdateListener{
 
     private ValueAnimator animator;
-    private BalloonListener listener;
-    private boolean isPopped;
+    private boolean isPopped = false;
 
     private PopListener mainactivity;
     private final String TAG = getClass().getName();
@@ -28,7 +28,6 @@ public class Balloon extends AppCompatImageView implements View.OnTouchListener{
         super(context);
 
         mainactivity = (PopListener) context;
-        listener = new BalloonListener(this);
         setOnTouchListener(this);
 
         setImageResource(R.mipmap.balon);
@@ -56,8 +55,8 @@ public class Balloon extends AppCompatImageView implements View.OnTouchListener{
         animator.setFloatValues(scrHeight, 0f);
         animator.setInterpolator(new LinearInterpolator());
         animator.setTarget(this);
-        animator.addListener(listener);
-        animator.addUpdateListener(listener);
+        animator.addListener(this);
+        animator.addUpdateListener(this);
         animator.start();
     }
 
@@ -82,5 +81,30 @@ public class Balloon extends AppCompatImageView implements View.OnTouchListener{
 
     public void setPopped(boolean b){
         isPopped = true;
+    }
+
+    @Override
+    public void onAnimationStart(Animator animator) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animator) {
+        if (!isPopped) mainactivity.popBalloon(this, false);
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animator) {
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animator) {
+
+    }
+
+    @Override
+    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+        setY((float) valueAnimator.getAnimatedValue());
     }
 }
