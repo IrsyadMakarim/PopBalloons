@@ -14,4 +14,6 @@
     <string name="missed_that_one">Missed that one!</string>
     <string name="you_finished_level_n">You finisehd level %s</string>
     <string name="popping_pin">Popping Pin</string>
+    <string name="score">Score</string>
+    <string name="high_score">High Score:</string>
 </resources>

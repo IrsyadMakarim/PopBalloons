@@ -30,7 +30,7 @@ public class Balloon extends AppCompatImageView implements View.OnTouchListener,
         mainactivity = (PopListener) context;
         setOnTouchListener(this);
 
-        setImageResource(R.mipmap.balon);
+        setImageResource(R.mipmap.apple);
         setColorFilter(color);
         int width = height / 2;
 
@@ -52,7 +52,7 @@ public class Balloon extends AppCompatImageView implements View.OnTouchListener,
     public void release(int scrHeight, int duration){
         animator = new ValueAnimator();
         animator.setDuration(duration);
-        animator.setFloatValues(scrHeight, 0f);
+        animator.setFloatValues(0f, scrHeight);
         animator.setInterpolator(new LinearInterpolator());
         animator.setTarget(this);
         animator.addListener(this);

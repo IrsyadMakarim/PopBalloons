@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,13 +46,17 @@ public class MainActivity extends AppCompatActivity implements PopListener{
     TextView highScoreDisplay;
     Button btn;
 
+    Audio audio;
+    LeaderboardActivity la;
+    DBHelper mydb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         TAG = getClass().getName();
 
-        getWindow().setBackgroundDrawableResource(R.mipmap.background);
+        getWindow().setBackgroundDrawableResource(R.mipmap.backgroundkp);
         setContentView(R.layout.activity_main);
 
         contentView = (ViewGroup) findViewById(R.id.content_view);
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         });
         colors[0] = Color.argb(255, 255, 0, 0);
         colors[1] = Color.argb(255, 0, 255, 0);
-        colors[2] = Color.argb(255, 0, 0, 255);
+        colors[2] = Color.argb(255, 255, 255, 0);
 
         contentView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -94,10 +99,14 @@ public class MainActivity extends AppCompatActivity implements PopListener{
             }
         });
 
+        audio = new Audio(this);
+        audio.prepareMediaPlayer(this);
     }
 
     @Override
     public void popBalloon(Balloon bal, boolean isTouched) {
+
+        audio.playSound();
 
         balloonsPopped++;
         balloons.remove(bal);
@@ -127,12 +136,15 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         level = 1; //Reset nilai level menjadi 1
         updateGameStats(); //Kita update stat
 
+        audio.playMusic();
+
         for (ImageView pin: pinImages){
             pin.setImageResource(R.drawable.pin);
         }
     }
 
     private void gameOver(){
+
         isGameStopped = true;
         isGameStarted = false;
         balloonsPopped = 0;
@@ -140,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         level = 0;
         Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
         btn.setText("Play Game");
+
+        audio.pauseMusic();
 
         for (Balloon bal : balloons){
             bal.setPopped(true);
@@ -149,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         if (HighScoreHelper.isTopScore(this, userScore)){
             HighScoreHelper.setTopScore(this, userScore);
             int newHigh = HighScoreHelper.getTopScore(this);
+            String score = String.valueOf(newHigh);
             highScoreDisplay.setText(String.format("%d", newHigh));
         }
     }
@@ -168,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         String message = String.format("Level %d finished!", level);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         level++;
+        balloonsPerLevel++;
         updateGameStats();
         btn.setText(String.format("Start level %d", level));
         isGameStarted = false;
@@ -175,6 +191,12 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         Log.d(TAG, String.format("balloonsLaunched = %d",
                 balloonsLaunched));
         balloonsPopped = 0;
+
+        if (HighScoreHelper.isTopScore(this, userScore)){
+            HighScoreHelper.setTopScore(this, userScore);
+            int newHigh = HighScoreHelper.getTopScore(this);
+            highScoreDisplay.setText(String.format("%d", newHigh));
+        }
     }
 
     private void updateGameStats(){
@@ -201,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements PopListener{
     protected void onResume(){
         super.onResume();
 
+        audio.playMusic();
+
         updateGameStats();
         setToFullScreen();
 
@@ -215,6 +239,13 @@ public class MainActivity extends AppCompatActivity implements PopListener{
                 }
             });
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        audio.pauseMusic();
     }
 
     private void setToFullScreen(){
