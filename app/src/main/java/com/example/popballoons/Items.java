@@ -2,25 +2,27 @@ package com.example.popballoons;
 
 public class Items {
 
-    private String name, score;
+    int id;
+    String score;
 
     public Items() {
     }
 
-    public Items(String name, String score) {
+    public Items(String score) {
 
-        this.name = name;
         this.score = score;
 
     }
 
-    public String getName() {
-        return name;
+    public Items(int id, String score){
+
+        this.id = id;
+        this.score = score;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setId(int id){ this.id = id; }
+
+    public int getId() { return id; }
 
     public String getScore() {
         return score;

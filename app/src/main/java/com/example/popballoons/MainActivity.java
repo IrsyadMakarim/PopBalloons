@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +48,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
     Button btn;
 
     Audio audio;
-    LeaderboardActivity la;
-    DBHelper mydb;
+    DatabaseHelper myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements PopListener{
 
         audio = new Audio(this);
         audio.prepareMediaPlayer(this);
+
+        myDb = new DatabaseHelper(this);
     }
 
     @Override
@@ -143,6 +145,15 @@ public class MainActivity extends AppCompatActivity implements PopListener{
         }
     }
 
+    private void checkHighScore(){
+        if (HighScoreHelper.isTopScore(this, userScore)){
+            HighScoreHelper.setTopScore(this, userScore);
+            int newHigh = HighScoreHelper.getTopScore(this);
+            highScoreDisplay.setText(String.format("%d", newHigh));
+            myDb.insertData(String.valueOf(newHigh));
+        }
+    }
+
     private void gameOver(){
 
         isGameStopped = true;
@@ -160,12 +171,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
             contentView.removeView(bal);
         }
 
-        if (HighScoreHelper.isTopScore(this, userScore)){
-            HighScoreHelper.setTopScore(this, userScore);
-            int newHigh = HighScoreHelper.getTopScore(this);
-            String score = String.valueOf(newHigh);
-            highScoreDisplay.setText(String.format("%d", newHigh));
-        }
+        checkHighScore();
     }
 
     private void startLevel(){
@@ -192,11 +198,7 @@ public class MainActivity extends AppCompatActivity implements PopListener{
                 balloonsLaunched));
         balloonsPopped = 0;
 
-        if (HighScoreHelper.isTopScore(this, userScore)){
-            HighScoreHelper.setTopScore(this, userScore);
-            int newHigh = HighScoreHelper.getTopScore(this);
-            highScoreDisplay.setText(String.format("%d", newHigh));
-        }
+        checkHighScore();
     }
 
     private void updateGameStats(){

@@ -14,6 +14,7 @@ import android.widget.Button;
 public class MenuActivity extends AppCompatActivity {
 
     private static String TAG;
+    String score;
 
     ViewGroup menuView;
     Button btnPlay, btnScore;
@@ -43,6 +44,8 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), LeaderboardActivity.class);
+                score = String.valueOf(HighScoreHelper.getTopScore(view.getContext()));
+                intent.putExtra("score_key", score);
                 startActivity(intent);
             }
         });

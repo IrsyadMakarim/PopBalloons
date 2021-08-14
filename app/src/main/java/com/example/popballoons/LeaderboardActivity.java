@@ -1,72 +1,55 @@
 package com.example.popballoons;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class LeaderboardActivity extends BaseAdapter {
+public class LeaderboardActivity extends AppCompatActivity {
 
-  private Context mContext;
-  private LayoutInflater inflater;
-  private List<Items> itemsItems;
+    private RecyclerView rvList;
+    DatabaseHelper myDb;
+    private ArrayList<Items> items = new ArrayList<>();
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_leaderboard);
 
-  public LeaderboardActivity(Context context, List<Items> itemsItems) {
-    this.mContext = context;
-    this.itemsItems = itemsItems;
+      getSupportActionBar().setTitle("Leaderboard");
+      rvList = findViewById(R.id.scoreRV);
+      myDb = new DatabaseHelper(this);
 
-  }
+      getDataItems();
 
-  @Override
-  public int getCount() {
-    return itemsItems.size();
-  }
-
-  @Override
-  public Object getItem(int location) {
-    return itemsItems.get(location);
-  }
-
-  @Override
-  public long getItemId(int position) {
-    return position;
-  }
-
-  @Override
-  public View getView(int position, View scoreView, ViewGroup parent) {
-    ViewHolder holder;
-    if (inflater == null) {
-      inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-    if (scoreView == null) {
-
-      scoreView = inflater.inflate(R.layout.list_row, parent, false);
-      holder = new ViewHolder();
-      holder.name = (TextView) scoreView.findViewById(R.id.leaderboardName);
-      holder.score = (TextView) scoreView.findViewById(R.id.leaderboardScore);
-
-      scoreView.setTag(holder);
-
-    } else {
-      holder = (ViewHolder) scoreView.getTag();
+      rvList.setLayoutManager(new LinearLayoutManager(this));
+      rvList.setAdapter(new ListAdapter(items));
     }
 
-    final Items m = itemsItems.get(position);
-    holder.name.setText(m.getName());
-    holder.score.setText(m.getScore());
+    private void getDataItems(){
+        Cursor cursor = myDb.getAllData();
 
-    return scoreView;
-  }
+        while (cursor.moveToNext()){
+            Items item = new Items();
+            item.setId(cursor.getInt(0));
+            item.setScore(cursor.getString(1));
 
-  static class ViewHolder {
-
-    TextView name;
-    TextView score;
-
-  }
+            items.add(item);
+        }
+    }
 }
