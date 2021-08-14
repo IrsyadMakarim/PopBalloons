@@ -1,4 +1,4 @@
-package com.example.popballoons;
+package com.internal.popfruit;
 
 import android.app.Activity;
 import android.content.Context;

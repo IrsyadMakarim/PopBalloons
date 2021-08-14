@@ -1,4 +1,4 @@
-package com.example.popballoons;
+package com.internal.popfruit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,19 +9,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
-import java.util.logging.Level;
-
-import com.example.popballoons.HighScoreHelper;
 
 public class MainActivity extends AppCompatActivity implements PopListener{
 

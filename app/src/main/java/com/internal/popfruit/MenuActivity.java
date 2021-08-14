@@ -1,4 +1,4 @@
-package com.example.popballoons;
+package com.internal.popfruit;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 
 public class MenuActivity extends AppCompatActivity {
